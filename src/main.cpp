@@ -42,7 +42,10 @@ bool primalityTest(const std::integral auto number) {
  */
 
 template<std::integral type>
-type getCoprime(const type number) {
+type getSmallerCoprime(const type number) {
+	if (number < 3) {
+		throw std::domain_error("number must be bigger than 2");
+	}
 	type temp {number};
 	type divider {number - 1};
 	std::vector<type> primeFactors;
@@ -86,6 +89,8 @@ int main() {
 	std::cout << "Inserisci il numero primo q\n";
 	std::cin >> q;
 
+	p == 3 ? q == 3 ? std::cerr << false : std::cerr << true : std::cerr << true;
+
 	std::cout << std::boolalpha;
 	std::cout << "p e q sono primi? " << (primalityTest(p) && primalityTest(q)) << '\n';
 
@@ -95,6 +100,11 @@ int main() {
 	std::uint64_t λn {std::lcm(p - 1, q - 1)};
 	std::cout << "λ(n) vale " << λn << '\n';
 
-	std::uint64_t e {getCoprime(λn)};
-	std::cout << "e, ovvero il coprimo di " << (p - 1) * (q - 1) << ", è " << e << '\n';
+	try {
+		std::uint64_t e {getSmallerCoprime(λn)};
+		std::cout << "e, ovvero il coprimo di " << λn << ", è " << e << '\n';
+	} catch (std::domain_error& exception) {
+		std::cerr << exception.what() << '\n';
+		return EXIT_FAILURE;
+	}
 }
