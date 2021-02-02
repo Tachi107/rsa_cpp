@@ -92,15 +92,14 @@ type getSmallerCoprime(const type number) {
 
 int main() {
 	std::uint64_t p, q;
-	std::cout << "Inserisci il numero primo p\n";
+	std::cout << "Inserisci il numero primo p: ";
 	std::cin >> p;
-	std::cout << "Inserisci il numero primo q\n";
+	std::cout << "Inserisci il numero primo q: ";
 	std::cin >> q;
-
-	p == 3 ? q == 3 ? std::cerr << false : std::cerr << true : std::cerr << true;
-
-	std::cout << std::boolalpha;
-	std::cout << "p e q sono primi? " << (primalityTest(p) && primalityTest(q)) << '\n';
+	if (!(primalityTest(p) && primalityTest(q))) {
+		std::cerr << "p e q devono essere numeri primi\n";
+		return EXIT_FAILURE;
+	}
 
 	std::uint64_t n {p * q};
 	std::cout << "n, ovvero il prodotto tra p e q, vale " << n << '\n';
