@@ -22,8 +22,6 @@ bool primalityTest(const std::integral auto number) {
 }
 
 /*
- * a, b coprimi se ax + by = 1
- * 
  * Per trovare il coprimo di un numero devo
  * scomporre in fattori primi quel numero. 
  * Per farlo devo dividerlo per numeri primi
@@ -34,11 +32,23 @@ bool primalityTest(const std::integral auto number) {
  * e divido il numero per il fattore,
  * se non lo è lo decremento e ripeto il controllo.
  * Il numero del quale trovare il coprimo sarà sempre pari,
- * in quanto è un prodotto tra due numeri pari, essendo
+ * in quanto è un mcm tra due numeri pari, essendo
  * derivati da un numero primo -1.
- * 
- * Oppure, coglione che sono, potrei implementare questa:
- * https://en.wikipedia.org/wiki/Euler%27s_totient_function
+ * Mentre scompongo per fattori primi
+ * mi metto da parte i numeri primi che trovo
+ * ma che non sono fattori del numero che sto scomponendo;
+ * questo perché un coprimo di un numero può
+ * essere ottenuto dal prodotto di numeri primi
+ * non appartenenti alla scomposizione in fattori
+ * del numero.
+ * In questa funzione scelgo il coprimo più grande
+ * minore del numero ottenuto come input.
+ * Se dovessi fare un unit test su questa funzione,
+ * potrei testare che
+ * il numero di output sia minore dell'input,
+ * e che il numero di output sia coprimo dell'input,
+ * in quanto l'output dev'essere
+ * un coprimo minore dell'input.
  */
 
 template<std::integral type>
@@ -48,12 +58,10 @@ type getSmallerCoprime(const type number) {
 	}
 	type temp {number};
 	type divider {number - 1};
-	std::vector<type> primeFactors;
 	std::vector<type> primeNotFactors;
 	while (temp > 1) {
 		if (primalityTest(divider)) {
 			if (temp % divider == 0) {
-				primeFactors.push_back(divider);
 				temp /= divider;
 			}
 			else {
