@@ -1,6 +1,7 @@
 #include <cmath>
 #include <concepts>
 #include <vector>
+#include <numeric>
 #include <iostream>
 
 bool primalityTest(const std::integral auto number) {
@@ -17,7 +18,7 @@ bool primalityTest(const std::integral auto number) {
 			}
 		}
 		return true;
-		}
+	}
 }
 
 /*
@@ -41,36 +42,41 @@ bool primalityTest(const std::integral auto number) {
  */
 
 template<std::integral type>
-auto getCoprime(type number) {
-	type divisore {number - 1};
+type getCoprime(const type number) {
+	type temp {number};
+	type divider {number - 1};
 	std::vector<type> primeFactors;
 	std::vector<type> primeNotFactors;
-	while (number > 1) {
-		if (primalityTest(divisore)) {
-			if (number % divisore == 0) {
-				primeFactors.push_back(divisore);
-				number /= divisore;
-				std::cout << divisore << '\n';
+	while (temp > 1) {
+		if (primalityTest(divider)) {
+			if (temp % divider == 0) {
+				primeFactors.push_back(divider);
+				temp /= divider;
 			}
 			else {
-				primeNotFactors.push_back(divisore);
-				if (divisore > 3) {
-					divisore -= 2;
+				primeNotFactors.push_back(divider);
+				if (divider > 3) {
+					divider -= 2;
 				}
 				else {
-					--divisore;
+					--divider;
 				}
 			}
 		}
 		else {
-			if (divisore > 3) {
-				divisore -= 2;
+			if (divider > 3) {
+				divider -= 2;
 			}
 			else {
-				--divisore;
+				--divider;
 			}
 		}
 	}
+	type coprime {1};
+	for (std::size_t i {0}; i < primeNotFactors.size() && coprime < number - primeNotFactors[primeNotFactors.size() - (primeNotFactors.size() - 1) ]; ++i) {
+		coprime *= primeNotFactors[i];
+	}
+	return coprime;
 }
 
 int main() {
@@ -81,11 +87,14 @@ int main() {
 	std::cin >> q;
 
 	std::cout << std::boolalpha;
-	std::cout << "p e q sono primi?\n" << (primalityTest(p) && primalityTest(q)) << '\n';
+	std::cout << "p e q sono primi? " << (primalityTest(p) && primalityTest(q)) << '\n';
 
 	std::uint64_t n {p * q};
+	std::cout << "n, ovvero il prodotto tra p e q, vale " << n << '\n';
 
-	std::cout << "Il coprimo di " << (p - 1) * (q - 1) << '\n';
-	getCoprime((p - 1) * (q - 1));
-	//std::cout << "e, ovvero il coprimo di " << (p - 1) * (q - 1) << " è " << getCoprime((p - 1) * (q - 1)) << '\n';
+	std::uint64_t λn {std::lcm(p - 1, q - 1)};
+	std::cout << "λ(n) vale " << λn << '\n';
+
+	std::uint64_t e {getCoprime(λn)};
+	std::cout << "e, ovvero il coprimo di " << (p - 1) * (q - 1) << ", è " << e << '\n';
 }
