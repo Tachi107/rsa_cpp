@@ -84,10 +84,39 @@ type getSmallerCoprime(const type number) {
 		}
 	}
 	type coprime {1};
-	for (std::size_t i {0}; i < primeNotFactors.size() && coprime < number - primeNotFactors[primeNotFactors.size() - (primeNotFactors.size() - 1) ]; ++i) {
+	for (std::size_t i {0}; i < primeNotFactors.size() && coprime < number - primeNotFactors[primeNotFactors.size() - (primeNotFactors.size() - 1)]; ++i) {
 		coprime *= primeNotFactors[i];
 	}
 	return coprime;
+}
+
+/*
+ * x[i+1] = x[i-1] % x[i]
+ */
+template<std::integral type>
+type computee(type φn, type d) {
+	std::vector<type> x(3);
+	x[0] = φn;
+	x[1] = d;
+
+	std::vector<type> a;
+	std::vector<type> b;
+
+	for (std::size_t i {2}; x[i] != 0; ++i) {
+		x.resize(x.size() + 1);
+		x[i + 1] = x[i - 1] % x[i];
+
+		x[i] = (a[i] * x[0]) + (b[i] * x[1]);
+		a[i] = (x[i] - b[i] * x[1]) / x[0];
+		b[i] = (x[i] - a[i] * x[0]) / x[1];
+
+		a[i] = (x[i] - ((x[i] - a[i] * x[0]) / x[1]) * x[1]) / x[0];
+		
+	}
+	std::gcd(x[0], x[1]) = x[x.size() - 1];
+	if (std::gcd(x[0], x[1]) != x[x.size() - 1]) {
+		throw std::logic_error("Qualcosa non va");
+	}
 }
 
 int main() {
@@ -104,14 +133,22 @@ int main() {
 	std::uint64_t n {p * q};
 	std::cout << "n, ovvero il prodotto tra p e q, vale " << n << '\n';
 
-	std::uint64_t λn {std::lcm(p - 1, q - 1)};
-	std::cout << "λ(n) vale " << λn << '\n';
+	//std::uint64_t λn {std::lcm(p - 1, q - 1)};
+	//std::cout << "λ(n) vale " << λn << '\n';
+	std::uint64_t φn {(p - 1) * (q - 1)};
+	std::cout << "φ(n) vale " << φn << '\n';
 
+	std::uint64_t d;
 	try {
-		std::uint64_t e {getSmallerCoprime(λn)};
-		std::cout << "e, ovvero il coprimo di " << λn << ", è " << e << '\n';
+		d = getSmallerCoprime(φn);
+		std::cout << "d, ovvero il coprimo di " << φn << ", è " << d << '\n';
 	} catch (std::domain_error& exception) {
 		std::cerr << exception.what() << '\n';
 		return EXIT_FAILURE;
-	}
+	} d = 157;
+
+	std::cout << std::gcd(φn, d) << '\n';
+
+	std::uint64_t x0 {φn};
+	std::uint64_t x1 {d};
 }
